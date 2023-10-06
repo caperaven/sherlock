@@ -15,13 +15,12 @@ impl Plugin for SherlockPlugin {
     }
 }
 
-fn setup_game(_commands: Commands, data: ResMut<Data>) {
+fn setup_game(_commands: Commands, mut data: ResMut<Data>) {
     println!("setup_game");
-    let matrix = &data.0;
+    let mut matrix = &mut data.0;
+    matrix.shuffle();
+
     for i in 0..matrix.rows {
-        for j in 0..matrix.cols {
-            print!("{}", j);
-        }
-        println!();
+        println!("{:?}", matrix.data[i]);
     }
 }

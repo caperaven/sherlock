@@ -1,7 +1,7 @@
 use rand::prelude::SliceRandom;
 
 pub struct Matrix2D {
-    data: Vec<Vec<i32>>,
+    pub data: Vec<Vec<i32>>,
     pub rows: usize,
     pub cols: usize,
 }
@@ -47,7 +47,6 @@ impl Matrix2D {
     pub fn shuffle(&mut self) {
         for i in 0..self.rows {
             self.data[i].shuffle(&mut rand::thread_rng());
-            println!("{:?}", self.data[i])
         }
     }
 }
