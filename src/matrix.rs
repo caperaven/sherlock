@@ -9,17 +9,23 @@ pub struct Matrix2D {
 impl Matrix2D {
     // Constructor to create a new Matrix2D of given rows and columns
     pub fn new(rows: usize, cols: usize) -> Self {
+        let mut result = Matrix2D::new_with_default(rows, cols, 0);
+
+        for i in 1..rows + 1 {
+            for j in 1..cols + 1 {
+                result.data[i - 1][j - 1] = j as i32;
+            }
+        }
+
+        return result;
+    }
+
+    pub fn new_with_default(rows: usize, cols: usize, default: i32) -> Self {
         let mut result = Matrix2D {
-            data: vec![vec![0; cols]; rows],
+            data: vec![vec![default; cols]; rows],
             rows,
             cols,
         };
-
-        for i in 0..rows {
-            for j in 0..cols {
-                result.data[i][j] = j as i32;
-            }
-        }
 
         return result;
     }
@@ -60,7 +66,7 @@ mod tests {
         let matrix = Matrix2D::new(3, 3);
         for i in 0..3 {
             for j in 0..3 {
-                assert_eq!(matrix.get(i, j), Some(j as i32));
+                assert_eq!(matrix.get(i, j), Some(j as i32 + 1));
             }
         }
     }

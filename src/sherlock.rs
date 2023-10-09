@@ -17,7 +17,7 @@ impl Plugin for SherlockPlugin {
 
 fn setup_game(_commands: Commands, mut data: ResMut<Data>) {
     println!("setup_game");
-    let mut matrix = &mut data.0;
+    let matrix = &mut data.0;
     matrix.shuffle();
 
     for i in 0..matrix.rows {
