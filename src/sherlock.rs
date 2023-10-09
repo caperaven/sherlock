@@ -5,12 +5,16 @@ use crate::matrix::Matrix2D;
 #[derive(Resource)]
 struct Data(Matrix2D);
 
+#[derive(Resource)]
+struct Selected(Matrix2D);
+
 pub struct SherlockPlugin;
 
 impl Plugin for SherlockPlugin {
     fn build(&self, app: &mut App) {
         println!("SherlockPlugin build");
         app.insert_resource(Data(Matrix2D::new(8, 8)));
+        app.insert_resource(Selected(Matrix2D::new_with_default(8, 8, 0)));
         app.add_systems(Startup, setup_game);
     }
 }
