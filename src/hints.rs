@@ -5,12 +5,15 @@ use crate::matrix::Matrix2D;
 #[derive(Resource)]
 struct Hints(Vec<HintItem>);
 
+#[derive(PartialEq)]
+#[derive(Debug)]
 enum HintType {
     Row,
     Column
 }
 
 // The structure of the hint type
+#[derive(PartialEq)]
 struct HintItem {
     pub hint_type: HintType,
     // what is the row or column index
@@ -42,11 +45,16 @@ fn create_hint(hint_type: HintType, matrix: Matrix2D) -> HintItem {
 // create a row hint
 // size indicates how many items the hint should have
 fn create_row_hint(row_index: i32, size: i32, matrix: Matrix2D) -> HintItem {
-    let result = HintItem {
+    let mut result = HintItem {
         hint_type: HintType::Row,
         index: row_index,
         values: Vec::new()
     };
+
+    let indexes = get_random_indexes(size);
+    for index in indexes {
+        result.values.push(matrix.get(row_index as usize, index as usize).unwrap());
+    }
 
     return result;
 }
@@ -54,11 +62,16 @@ fn create_row_hint(row_index: i32, size: i32, matrix: Matrix2D) -> HintItem {
 // create column hint
 // size indicates how many items the hint should have
 fn create_column_hint(col_index: i32, size: i32, matrix: Matrix2D) -> HintItem {
-    let result = HintItem {
+    let mut result = HintItem {
         hint_type: HintType::Column,
         index: col_index,
         values: Vec::new()
     };
+
+    let indexes = get_random_indexes(size);
+    for index in indexes {
+        result.values.push(matrix.get(index as usize, col_index as usize).unwrap());
+    }
 
     return result;
 }
@@ -85,7 +98,14 @@ fn get_random_indexes(size: i32) -> Vec<i32> {
 
 #[cfg(test)]
 mod tests {
+    use crate::matrix;
     use super::*;
+
+    fn get_matrix() -> matrix::Matrix2D {
+        let mut matrix = Matrix2D::new(8, 8);
+        matrix.shuffle();
+        return matrix;
+    }
 
     #[test]
     fn test_get_random_indexes() {
@@ -96,5 +116,23 @@ mod tests {
         let result3 = get_random_indexes(3);
         assert_eq!(result3.len(), 3);
         assert!(result3[0] < result3[1] && result3[1] < result3[2]);
+    }
+
+    #[test]
+    fn test_create_row_hint() {
+        let matrix = get_matrix();
+        let result = create_row_hint(0, 2, matrix);
+        assert_eq!(result.hint_type, HintType::Row);
+        assert_eq!(result.index, 0);
+        assert_eq!(result.values.len(), 2);
+    }
+
+    #[test]
+    fn test_create_column_hint() {
+        let matrix = get_matrix();
+        let result = create_column_hint(0, 2, matrix);
+        assert_eq!(result.hint_type, HintType::Column);
+        assert_eq!(result.index, 0);
+        assert_eq!(result.values.len(), 2);
     }
 }
