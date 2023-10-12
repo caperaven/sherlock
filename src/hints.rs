@@ -69,12 +69,15 @@ fn get_random_indexes(size: i32) -> Vec<i32> {
 
     let mut min: i32 = 0;
     let mut max: i32 = 4;
+    let mut size_offset: i32 = size - 1;
 
     for _ in 0..size {
         let index = rnd.gen_range(min..=max);
         result.push(index);
-        min = max + 1;
-        max = 7;
+
+        size_offset -= 1;
+        min = index + 1;
+        max = 7 - size_offset;
     }
 
     return result;
@@ -86,7 +89,12 @@ mod tests {
 
     #[test]
     fn test_get_random_indexes() {
-        let result = get_random_indexes(2);
-        assert_eq!(result.len(), 2);
+        let result2 = get_random_indexes(2);
+        assert_eq!(result2.len(), 2);
+        assert!(result2[0] < result2[1]);
+
+        let result3 = get_random_indexes(3);
+        assert_eq!(result3.len(), 3);
+        assert!(result3[0] < result3[1] && result3[1] < result3[2]);
     }
 }
