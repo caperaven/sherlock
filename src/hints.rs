@@ -22,6 +22,22 @@ struct HintItem {
     pub values: Vec<i32>
 }
 
+fn create_hints(row_hint_count: i32, column_hint_count: i32, matrix: &Matrix2D) -> Hints {
+    let mut result: Hints = Hints(Vec::new());
+
+    for _ in 0..row_hint_count {
+        let hint = create_hint(HintType::Row, matrix);
+        result.0.push(hint);
+    }
+
+    for _ in 0..column_hint_count {
+        let hint = create_hint(HintType::Column, matrix);
+        result.0.push(hint);
+    }
+
+    return result;
+}
+
 // This is the main function that generates hints.
 // When generating hints for rows it will take a row from the matrix and generate a hint for it
 // The items in the hint is in the right order as it is found in the matrix.
@@ -148,5 +164,16 @@ mod tests {
         assert_eq!(col_result.hint_type, HintType::Column);
         assert_eq!(col_result.index >= 0 && col_result.index <= 7, true);
         assert_eq!(col_result.values.len() >= 2 && col_result.values.len() <= 5, true);
+    }
+
+    #[test]
+    fn test_create_hints() {
+        let matrix = get_matrix();
+        let result = create_hints(2, 2, &matrix);
+        assert_eq!(result.0.len(), 4);
+        assert_eq!(result.0[0].hint_type, HintType::Row);
+        assert_eq!(result.0[1].hint_type, HintType::Row);
+        assert_eq!(result.0[2].hint_type, HintType::Column);
+        assert_eq!(result.0[3].hint_type, HintType::Column);
     }
 }
