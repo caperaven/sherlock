@@ -21,13 +21,33 @@ impl Matrix2D {
     }
 
     pub fn new_with_default(rows: usize, cols: usize, default: i32) -> Self {
-        let mut result = Matrix2D {
+        let result = Matrix2D {
             data: vec![vec![default; cols]; rows],
             rows,
             cols,
         };
 
         return result;
+    }
+
+    pub fn get_row(&self, row: usize) -> Option<&Vec<i32>> {
+        if row < self.rows {
+            Some(&self.data[row])
+        } else {
+            None
+        }
+    }
+
+    pub fn get_column(&self, col: usize) -> Option<Vec<i32>> {
+        if col < self.cols {
+            let mut result: Vec<i32> = vec![];
+            for i in 0..self.rows {
+                result.push(self.data[i][col]);
+            }
+            Some(result)
+        } else {
+            None
+        }
     }
 
     // Method to get a value at a particular row and column
