@@ -3,18 +3,20 @@ use rand::Rng;
 use crate::matrix::Matrix2D;
 
 #[derive(Resource)]
-struct Hints(Vec<HintItem>);
+#[derive(Debug)]
+pub struct Hints(pub Vec<HintItem>);
 
 #[derive(PartialEq)]
 #[derive(Debug)]
-enum HintType {
+pub enum HintType {
     Row,
     Column
 }
 
 // The structure of the hint type
 #[derive(PartialEq)]
-struct HintItem {
+#[derive(Debug)]
+pub struct HintItem {
     pub hint_type: HintType,
     // what is the row or column index
     pub index: i32,
@@ -22,7 +24,7 @@ struct HintItem {
     pub values: Vec<i32>
 }
 
-fn create_hints(row_hint_count: i32, column_hint_count: i32, matrix: &Matrix2D) -> Hints {
+pub fn create_hints(row_hint_count: i32, column_hint_count: i32, matrix: &Matrix2D) -> Hints {
     let mut result: Hints = Hints(Vec::new());
 
     for _ in 0..row_hint_count {
