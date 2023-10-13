@@ -30,7 +30,7 @@ struct HintItem {
 // An row hint that is two items could be [0, 4] or [4, 1] ... etc
 // An rwo hint that is three items could be [2, 1, 3] or [3, 7, 6] ... etc
 // In order to do generate this we will need to use random numbers that follow a certain pattern
-fn create_hint(hint_type: HintType, matrix: Matrix2D) -> HintItem {
+fn create_hint(hint_type: HintType, matrix: &Matrix2D) -> HintItem {
     // 1. get a random number between 0 and 8 as a reference to the matrix.
     let mut rnd = rand::thread_rng();
     let index = rnd.gen_range(0..=7);
@@ -44,7 +44,7 @@ fn create_hint(hint_type: HintType, matrix: Matrix2D) -> HintItem {
 
 // create a row hint
 // size indicates how many items the hint should have
-fn create_row_hint(row_index: i32, size: i32, matrix: Matrix2D) -> HintItem {
+fn create_row_hint(row_index: i32, size: i32, matrix: &Matrix2D) -> HintItem {
     let mut result = HintItem {
         hint_type: HintType::Row,
         index: row_index,
@@ -61,7 +61,7 @@ fn create_row_hint(row_index: i32, size: i32, matrix: Matrix2D) -> HintItem {
 
 // create column hint
 // size indicates how many items the hint should have
-fn create_column_hint(col_index: i32, size: i32, matrix: Matrix2D) -> HintItem {
+fn create_column_hint(col_index: i32, size: i32, matrix: &Matrix2D) -> HintItem {
     let mut result = HintItem {
         hint_type: HintType::Column,
         index: col_index,
@@ -121,7 +121,7 @@ mod tests {
     #[test]
     fn test_create_row_hint() {
         let matrix = get_matrix();
-        let result = create_row_hint(0, 2, matrix);
+        let result = create_row_hint(0, 2, &matrix);
         assert_eq!(result.hint_type, HintType::Row);
         assert_eq!(result.index, 0);
         assert_eq!(result.values.len(), 2);
@@ -130,9 +130,23 @@ mod tests {
     #[test]
     fn test_create_column_hint() {
         let matrix = get_matrix();
-        let result = create_column_hint(0, 2, matrix);
+        let result = create_column_hint(0, 2, &matrix);
         assert_eq!(result.hint_type, HintType::Column);
         assert_eq!(result.index, 0);
         assert_eq!(result.values.len(), 2);
+    }
+
+    #[test]
+    fn test_create_hint() {
+        let matrix = get_matrix();
+        let row_result = create_hint(HintType::Row, &matrix);
+        assert_eq!(row_result.hint_type, HintType::Row);
+        assert_eq!(row_result.index >= 0 && row_result.index <= 7, true);
+        assert_eq!(row_result.values.len() >= 2 && row_result.values.len() <= 5, true);
+
+        let col_result = create_hint(HintType::Column, &matrix);
+        assert_eq!(col_result.hint_type, HintType::Column);
+        assert_eq!(col_result.index >= 0 && col_result.index <= 7, true);
+        assert_eq!(col_result.values.len() >= 2 && col_result.values.len() <= 5, true);
     }
 }
