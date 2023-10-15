@@ -66,6 +66,20 @@ impl Matrix2D {
             self.data[i].shuffle(&mut rand::thread_rng());
         }
     }
+
+    // Search the matrix and if any of the cells is empty return false
+    pub fn is_complete(&self) -> bool {
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                let value = self.get(i, j);
+                if value == 0 {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
 
 #[cfg(test)]
@@ -77,7 +91,7 @@ mod tests {
         let matrix = Matrix2D::new(3, 3);
         for i in 0..3 {
             for j in 0..3 {
-                assert_eq!(matrix.get(i, j), Some(j as i32 + 1));
+                assert_eq!(matrix.get(i, j), j as i32 + 1);
             }
         }
     }
@@ -86,14 +100,7 @@ mod tests {
     fn test_matrix_set_and_get() {
         let mut matrix = Matrix2D::new(3, 3);
         assert!(matrix.set(1, 1, 5));
-        assert_eq!(matrix.get(1, 1), Some(5));
-    }
-
-    #[test]
-    fn test_matrix_get_out_of_bounds() {
-        let matrix = Matrix2D::new(3, 3);
-        assert_eq!(matrix.get(4, 1), None);
-        assert_eq!(matrix.get(1, 4), None);
+        assert_eq!(matrix.get(1, 1), 5);
     }
 
     #[test]
@@ -101,5 +108,14 @@ mod tests {
         let mut matrix = Matrix2D::new(3, 3);
         assert!(!matrix.set(4, 1, 5));
         assert!(!matrix.set(1, 4, 5));
+    }
+
+    #[test]
+    fn test_is_complete() {
+        let mut matrix = Matrix2D::new(3, 3);
+        assert_eq!(matrix.is_complete(), true);
+
+        matrix.set(0, 0, 0);
+        assert_eq!(matrix.is_complete(), false);
     }
 }
