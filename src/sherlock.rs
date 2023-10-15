@@ -52,6 +52,12 @@ fn setup_game(_commands: Commands, data: Res<Data>, hints: Res<Hints>, selection
         println!("{:?}", selected_matrix.data[i]);
     }
 
+    let hints = &hints.0;
+    for i in 0..hints.len() {
+        let hint = &hints[i];
+        println!("{:?}", hint);
+    }
+
     // let hints_collection = &hints.0;
     // for hint in hints_collection {
     //     println!("{:?}", hint);
