@@ -10,7 +10,8 @@ pub struct Settings {
     pub row_tile_count: i32,
     pub col_tile_count: i32,
     pub row_hint_count: i32,
-    pub col_hint_count: i32
+    pub col_hint_count: i32,
+    pub gap_count: i32
 }
 
 impl Settings {

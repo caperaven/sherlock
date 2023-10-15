@@ -1,5 +1,6 @@
 use bevy::app::App;
 use bevy::prelude::*;
+use rand::Rng;
 use crate::matrix::Matrix2D;
 use crate::hints::{create_hints, Hints};
 use crate::settings::Settings;
@@ -23,7 +24,8 @@ impl Plugin for SherlockPlugin {
         let hint_col_count: i32 = settings.col_hint_count; 
 
         let matrix = Matrix2D::new(row_tile_count, col_tile_count);
-        let selection_matrix = matrix.clone();
+        let mut selection_matrix = matrix.clone();
+        set_selection_gaps(&mut selection_matrix, settings.gap_count);
 
         app.insert_resource(settings);
         app.insert_resource(create_hints(hint_row_count, hint_col_count, &matrix));
@@ -45,5 +47,18 @@ fn setup_game(_commands: Commands, mut data: ResMut<Data>, hints: ResMut<Hints>)
     let hints_collection = &hints.0;
     for hint in hints_collection {
         println!("{:?}", hint);
+    }
+}
+
+fn set_selection_gaps(selection: &mut Matrix2D, count: i32) {
+    let mut rnd = rand::thread_rng();
+
+    let row_count = selection.rows - 1;
+    let col_count = selection.cols - 1;
+
+    for _ in 0..count {
+        let row = rnd.gen_range(0..=row_count);
+        let col = rnd.gen_range(0..=col_count);
+        selection.set(row, col, 0);
     }
 }
