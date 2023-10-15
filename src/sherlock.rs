@@ -19,13 +19,11 @@ impl Plugin for SherlockPlugin {
         // Make a copy of the settings values so we can assign it to the resources
         let row_tile_count: usize = settings.row_tile_count as usize;
         let col_tile_count: usize = settings.col_tile_count as usize;
-        let select_row_count: usize = settings.row_hint_count as usize;
-        let select_col_count: usize = settings.col_hint_count as usize;
         let hint_row_count: i32 = settings.row_hint_count;
         let hint_col_count: i32 = settings.col_hint_count; 
 
         let matrix = Matrix2D::new(row_tile_count, col_tile_count);
-        let selection_matrix = Matrix2D::new_with_default(select_row_count, select_col_count, 0);
+        let selection_matrix = matrix.clone();
 
         app.insert_resource(settings);
         app.insert_resource(create_hints(hint_row_count, hint_col_count, &matrix));

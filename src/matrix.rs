@@ -1,5 +1,6 @@
 use rand::prelude::SliceRandom;
 
+#[derive(Eq, PartialEq, Debug, Clone)]
 pub struct Matrix2D {
     pub data: Vec<Vec<i32>>,
     pub rows: usize,
