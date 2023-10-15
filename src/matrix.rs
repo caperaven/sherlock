@@ -31,33 +31,23 @@ impl Matrix2D {
         return result;
     }
 
-    pub fn get_row(&self, row: usize) -> Option<&Vec<i32>> {
-        if row < self.rows {
-            Some(&self.data[row])
-        } else {
-            None
-        }
+    pub fn get_row(&self, row: usize) -> &Vec<i32> {
+        &self.data[row]
     }
 
-    pub fn get_column(&self, col: usize) -> Option<Vec<i32>> {
-        if col < self.cols {
-            let mut result: Vec<i32> = vec![];
-            for i in 0..self.rows {
-                result.push(self.data[i][col]);
-            }
-            Some(result)
-        } else {
-            None
+    pub fn get_column(&self, col: usize) -> Vec<i32> {
+        let mut result: Vec<i32> = vec![];
+        
+        for i in 0..self.rows {
+            result.push(self.data[i][col]);
         }
+
+        result
     }
 
     // Method to get a value at a particular row and column
-    pub fn get(&self, row: usize, col: usize) -> Option<i32> {
-        if row < self.rows && col < self.cols {
-            Some(self.data[row][col])
-        } else {
-            None
-        }
+    pub fn get(&self, row: usize, col: usize) -> i32 {
+        self.data[row][col]
     }
 
     // Method to set a value at a particular row and column

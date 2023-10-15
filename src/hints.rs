@@ -70,10 +70,11 @@ fn create_hint(hint_type: HintType, matrix: &Matrix2D, ignore_indexes: &Vec<i32>
     // 1. get a random number between 0 and 8 as a reference to the matrix.
     let mut rnd = rand::thread_rng();
 
+    let last_index = size -1;
     // 2. get a random number between 2 and 5 as the size of the hint
     // the random number may  not be in the ignore_indexes array
-    let index = generate_index(&mut rnd, size, ignore_indexes);
-    let size = rnd.gen_range(2..=size - 2);
+    let index = generate_index(&mut rnd, last_index, ignore_indexes);
+    let size = rnd.gen_range(2..=last_index - 2);
 
     match hint_type {
         HintType::Row => create_row_hint(index, size, matrix),
@@ -91,7 +92,7 @@ fn create_row_hint(row_index: i32, size: i32, matrix: &Matrix2D) -> HintItem {
         indexes: get_random_indexes(size)
     };
 
-    let row = matrix.get_row(row_index as usize).unwrap();
+    let row = matrix.get_row(row_index as usize);
 
     for index in &result.indexes {
         result.values.push(row[*index as usize]);
@@ -110,7 +111,7 @@ fn create_column_hint(col_index: i32, size: i32, matrix: &Matrix2D) -> HintItem 
         indexes: get_random_indexes(size)
     };
 
-    let column = matrix.get_column(col_index as usize).unwrap();
+    let column = matrix.get_column(col_index as usize);
 
     for index in &result.indexes {
         result.values.push(column[*index as usize]);
@@ -169,7 +170,7 @@ mod tests {
         assert_eq!(result.index, 0);
         assert_eq!(result.values.len(), 2);
 
-        let matrix_row = matrix.get_row(0).unwrap();
+        let matrix_row = matrix.get_row(0);
         let length = result.indexes.len();
 
         for i in 0..length {
@@ -187,7 +188,7 @@ mod tests {
         assert_eq!(result.index, 0);
         assert_eq!(result.values.len(), 2);
 
-        let matrix_column = matrix.get_column(0).unwrap();
+        let matrix_column = matrix.get_column(0);
         let length = result.indexes.len();
 
         for i in 0..length {

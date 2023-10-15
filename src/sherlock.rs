@@ -23,7 +23,9 @@ impl Plugin for SherlockPlugin {
         let hint_row_count: i32 = settings.row_hint_count;
         let hint_col_count: i32 = settings.col_hint_count; 
 
-        let matrix = Matrix2D::new(row_tile_count, col_tile_count);
+        let mut matrix = Matrix2D::new(row_tile_count, col_tile_count);
+        matrix.shuffle();
+
         let mut selection_matrix = matrix.clone();
         set_selection_gaps(&mut selection_matrix, settings.gap_count);
 
@@ -35,26 +37,32 @@ impl Plugin for SherlockPlugin {
     }
 }
 
-fn setup_game(_commands: Commands, mut data: ResMut<Data>, hints: ResMut<Hints>) {
+fn setup_game(_commands: Commands, data: Res<Data>, hints: Res<Hints>, selection: Res<Selected>) {
     println!("setup_game");
-    let matrix = &mut data.0;
-    matrix.shuffle();
+    let matrix = &data.0;
+    let selected_matrix = &selection.0;
 
+    print!("Matrix: \n");
     for i in 0..matrix.rows {
         println!("{:?}", matrix.data[i]);
     }
 
-    let hints_collection = &hints.0;
-    for hint in hints_collection {
-        println!("{:?}", hint);
+    print!("Selected: \n");
+    for i in 0..selected_matrix.rows {
+        println!("{:?}", selected_matrix.data[i]);
     }
+
+    // let hints_collection = &hints.0;
+    // for hint in hints_collection {
+    //     println!("{:?}", hint);
+    // }
 }
 
 fn set_selection_gaps(selection: &mut Matrix2D, count: i32) {
     let mut rnd = rand::thread_rng();
 
     let row_count = selection.rows - 1;
-    let col_count = selection.cols - 1;
+    let col_count = selection.cols- 1;
 
     for _ in 0..count {
         let row = rnd.gen_range(0..=row_count);
