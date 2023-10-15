@@ -30,15 +30,18 @@ pub fn create_hints(row_hint_count: i32, column_hint_count: i32, matrix: &Matrix
     let mut result: Hints = Hints(Vec::new());
 
     let mut row_indexes: Vec<i32> = vec![];
+    let row_size = matrix.rows as i32;
+    let col_size = matrix.cols as i32;
+
     for _ in 0..row_hint_count {
-        let hint = create_hint(HintType::Row, matrix, &row_indexes);
+        let hint = create_hint(HintType::Row, matrix, &row_indexes, row_size);
         row_indexes.push(hint.index);
         result.0.push(hint);
     }
 
     let mut col_indexes: Vec<i32> = vec![];
     for _ in 0..column_hint_count {
-        let hint = create_hint(HintType::Column, matrix, &col_indexes);
+        let hint = create_hint(HintType::Column, matrix, &col_indexes, col_size);
         col_indexes.push(hint.index);
         result.0.push(hint);
     }
@@ -63,14 +66,14 @@ fn generate_index(rnd: &mut impl Rng, max: i32, ignore_indexes: &Vec<i32>) -> i3
 // An row hint that is two items could be [0, 4] or [4, 1] ... etc
 // An rwo hint that is three items could be [2, 1, 3] or [3, 7, 6] ... etc
 // In order to do generate this we will need to use random numbers that follow a certain pattern
-fn create_hint(hint_type: HintType, matrix: &Matrix2D, ignore_indexes: &Vec<i32>) -> HintItem {
+fn create_hint(hint_type: HintType, matrix: &Matrix2D, ignore_indexes: &Vec<i32>, size: i32) -> HintItem {
     // 1. get a random number between 0 and 8 as a reference to the matrix.
     let mut rnd = rand::thread_rng();
 
     // 2. get a random number between 2 and 5 as the size of the hint
     // the random number may  not be in the ignore_indexes array
-    let index = generate_index(&mut rnd, 7, ignore_indexes);
-    let size = rnd.gen_range(2..=5);
+    let index = generate_index(&mut rnd, size, ignore_indexes);
+    let size = rnd.gen_range(2..=size - 2);
 
     match hint_type {
         HintType::Row => create_row_hint(index, size, matrix),
@@ -198,13 +201,13 @@ mod tests {
     fn test_create_hint() {
         let matrix = get_matrix();
         let row_indexes: Vec<i32> = vec![];
-        let row_result = create_hint(HintType::Row, &matrix, &row_indexes);
+        let row_result = create_hint(HintType::Row, &matrix, &row_indexes, matrix.rows as i32);
         assert_eq!(row_result.hint_type, HintType::Row);
         assert_eq!(row_result.index >= 0 && row_result.index <= 7, true);
         assert_eq!(row_result.values.len() >= 2 && row_result.values.len() <= 5, true);
 
         let col_indexes: Vec<i32> = vec![];
-        let col_result = create_hint(HintType::Column, &matrix, &col_indexes);
+        let col_result = create_hint(HintType::Column, &matrix, &col_indexes, matrix.cols as i32);
         assert_eq!(col_result.hint_type, HintType::Column);
         assert_eq!(col_result.index >= 0 && col_result.index <= 7, true);
         assert_eq!(col_result.values.len() >= 2 && col_result.values.len() <= 5, true);
