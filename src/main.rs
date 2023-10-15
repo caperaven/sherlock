@@ -1,6 +1,7 @@
 mod matrix;
 mod sherlock;
 mod hints;
+mod settings;
 
 use bevy::prelude::*;
 use crate::sherlock::SherlockPlugin;
