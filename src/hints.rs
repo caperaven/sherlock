@@ -165,6 +165,15 @@ mod tests {
         assert_eq!(result.hint_type, HintType::Row);
         assert_eq!(result.index, 0);
         assert_eq!(result.values.len(), 2);
+
+        let matrix_row = matrix.get_row(0).unwrap();
+        let length = result.indexes.len();
+
+        for i in 0..length {
+            let matrix_value = matrix_row[result.indexes[i] as usize];
+            let value = result.values[i];
+            assert_eq!(value, matrix_value)
+        }
     }
 
     #[test]
@@ -174,6 +183,15 @@ mod tests {
         assert_eq!(result.hint_type, HintType::Column);
         assert_eq!(result.index, 0);
         assert_eq!(result.values.len(), 2);
+
+        let matrix_column = matrix.get_column(0).unwrap();
+        let length = result.indexes.len();
+
+        for i in 0..length {
+            let matrix_value = matrix_column[result.indexes[i] as usize];
+            let value = result.values[i];
+            assert_eq!(value, matrix_value)
+        }
     }
 
     #[test]
